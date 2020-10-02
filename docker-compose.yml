@@ -1,0 +1,49 @@
+version: "2"
+
+services:
+  app:
+    build: ./devops/docker/app
+    expose:
+      - 9000
+    working_dir: /code
+    command: "php-fpm"
+    volumes:
+      - ./:/code
+    entrypoint: /bin/sh -c
+    depends_on:
+      - database
+  web:
+    image: nginx:alpine
+    ports:
+      - 81:80
+    volumes:
+      - ./devops/docker/web/default.conf:/etc/nginx/conf.d/default.conf
+      - ./:/code
+    depends_on:
+      - app
+  worker:
+    container_name: worker
+    build: ./devops/docker/worker
+    working_dir: /code
+    command: "./artisan queue:work"
+    volumes:
+      - ./:/code
+    entrypoint: /bin/sh -c
+    depends_on:
+      - database
+  cache:
+    container_name: cache
+    image: redis:latest
+  database:
+    container_name: database
+    image: mariadb:10.5.5
+    ports:
+      - 3309:3306
+    volumes:
+      - database_data:/var/lib/mariadb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+volumes:
+  database_data:
+  database_logs:
