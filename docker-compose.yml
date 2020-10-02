@@ -2,14 +2,11 @@ version: "2"
 
 services:
   app:
-    build: ./devops/docker/app
-    expose:
-      - 9000
-    working_dir: /code
-    command: "php-fpm"
+    build:
+      dockerfile: ./devops/docker/app/Dockerfile.dev
+      context: .
     volumes:
       - ./:/code
-    entrypoint: /bin/sh -c
     depends_on:
       - database
   web:
@@ -31,6 +28,7 @@ services:
     entrypoint: /bin/sh -c
     depends_on:
       - database
+      - app
   cache:
     container_name: cache
     image: redis:latest
