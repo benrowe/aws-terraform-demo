@@ -17,3 +17,9 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\API\V1'], static function () {
+    Route::group(['prefix' => 'books'], static function () {
+       Route::get('', 'BookController@index');
+    });
+});
