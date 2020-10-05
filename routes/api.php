@@ -20,6 +20,11 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\API\V1'], static function () {
     Route::group(['prefix' => 'books'], static function () {
-       Route::get('', 'BookController@index');
+        Route::get('', 'BookController@index');
+        Route::post('', 'BookController@store');
+        Route::get('{book}', 'BookController@show');
+        Route::put('{book}', 'BookController@update');
+        Route::delete('{book}', 'BookController@destroy');
+
     });
 });
