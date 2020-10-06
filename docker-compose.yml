@@ -20,7 +20,9 @@ services:
       - app
   worker:
     container_name: worker
-    build: ./devops/docker/worker
+    build:
+      dockerfile: ./devops/docker/worker/Dockerfile.dev
+      context: .
     working_dir: /code
     command: "./artisan queue:work"
     volumes:

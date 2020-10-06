@@ -4,6 +4,8 @@ WORKDIR /code
 
 EXPOSE 9000
 
+COPY . /code
+
 COPY devops/docker/app/command-prod.sh /opt/command-prod.sh
 
 RUN docker-php-ext-install pdo pdo_mysql opcache
@@ -17,4 +19,11 @@ RUN php -r 'readfile("https://getcomposer.org/installer");' > composer-setup.php
 composer install
 
 FROM php:7.4-fpm-alpine
+
+RUN docker-php-ext-install pdo pdo_mysql opcache
+
+WORKDIR /code/composer
+COPY --from=0 /code /code
+
+CMD /opt/command-prod.sh
 

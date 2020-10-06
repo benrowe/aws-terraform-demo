@@ -2,7 +2,7 @@ FROM php:7.4-fpm-alpine
 
 WORKDIR /code
 
-COPY devops/docker/app/command-prod.sh /opt/command-prod.sh
+COPY devops/docker/app/command-dev.sh /opt/command-dev.sh
 
 RUN docker-php-ext-install pdo pdo_mysql opcache
 
@@ -12,12 +12,4 @@ RUN php -r 'readfile("https://getcomposer.org/installer");' > composer-setup.php
 	&& rm -f composer-setup.php \
 	&& chown www-data.www-data /var/www
 
-FROM php:7.4-fpm-alpine
-
-RUN docker-php-ext-install pdo pdo_mysql opcache
-
-WORKDIR /code/composer
-COPY --from=0 /code /code
-
-CMD /opt/command-prod.sh
-
+CMD /opt/command-dev.sh
