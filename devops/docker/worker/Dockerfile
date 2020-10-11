@@ -2,9 +2,11 @@ FROM php:7.4-fpm-alpine
 
 WORKDIR /code
 
-COPY devops/docker/app/command-prod.sh /opt/command-prod.sh
+#RUN pecl install redis-5.1.0
+RUN apt-get update && \
+    docker-php-ext-install pdo pdo_mysql opcache redis
 
-RUN docker-php-ext-install pdo pdo_mysql opcache
+COPY devops/docker/app/command-prod.sh /usr/local/bin/init.sh
 
 # All things composer
 RUN php -r 'readfile("https://getcomposer.org/installer");' > composer-setup.php \
@@ -14,10 +16,12 @@ RUN php -r 'readfile("https://getcomposer.org/installer");' > composer-setup.php
 
 FROM php:7.4-fpm-alpine
 
-RUN docker-php-ext-install pdo pdo_mysql opcache
+#RUN pecl install redis-5.1.0
+RUN apt-get update && \
+    docker-php-ext-install pdo pdo_mysql opcache redis
 
 WORKDIR /code/composer
 COPY --from=0 /code /code
 
-CMD /opt/command-prod.sh
+CMD /usr/local/bin/init.sh
 

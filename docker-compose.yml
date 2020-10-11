@@ -2,6 +2,7 @@ version: "2"
 
 services:
   app:
+    container_name: app
     build:
       dockerfile: ./devops/docker/app/Dockerfile.dev
       context: .
@@ -9,7 +10,40 @@ services:
       - ./:/code
     depends_on:
       - database
+      - cache
+    environment:
+      APP_ENV: local
+      CACHE_DRIVER: redis
+      SESSION_DRIVER: redis
+      QUEUE_DRIVER: redis
+      REDIS_HOST: cache
+  worker:
+    image: app-background
+    container_name: worker
+    build:
+      dockerfile: ./devops/docker/worker/Dockerfile.dev
+      context: .
+    volumes:
+      - ./:/code
+    restart: always
+    depends_on:
+      - database
+      - app
+    environment:
+      CONTAINER_ROLE: worker
+  scheduler:
+    image: app-background
+    container_name: scheduler
+    depends_on:
+      - app
+      - database
+    volumes:
+      - ./:/code
+    restart: always
+    environment:
+      CONTAINER_ROLE: scheduler
   web:
+    container_name: web
     image: nginx:alpine
     ports:
       - 81:80
@@ -18,19 +52,7 @@ services:
       - ./:/code
     depends_on:
       - app
-  worker:
-    container_name: worker
-    build:
-      dockerfile: ./devops/docker/worker/Dockerfile.dev
-      context: .
-    working_dir: /code
-    command: "./artisan queue:work"
-    volumes:
-      - ./:/code
-    entrypoint: /bin/sh -c
-    depends_on:
-      - database
-      - app
+
   cache:
     container_name: cache
     image: redis:latest

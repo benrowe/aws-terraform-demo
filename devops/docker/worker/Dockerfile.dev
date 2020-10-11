@@ -1,15 +1,11 @@
-FROM php:7.4-fpm-alpine
+FROM adhocore/phpfpm:7.4
+
+MAINTAINER Ben Rowe <ben.rowe.83@gmail.com>
 
 WORKDIR /code
 
-COPY devops/docker/app/command-dev.sh /opt/command-dev.sh
+RUN apk add bash
 
-RUN docker-php-ext-install pdo pdo_mysql opcache
+COPY devops/docker/worker/command-dev.sh /usr/local/bin/init.sh
 
-# All things composer
-RUN php -r 'readfile("https://getcomposer.org/installer");' > composer-setup.php \
-	&& php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
-	&& rm -f composer-setup.php \
-	&& chown www-data.www-data /var/www
-
-CMD /opt/command-dev.sh
+CMD /usr/local/bin/init.sh
