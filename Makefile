@@ -27,6 +27,12 @@ help:
 	} \
 	{ lastLine = $$0 }' $(MAKEFILE_LIST)
 
+## rebuild the workspace
+dev-rebuild:
+	docker-compose down
+	docker-compose build
+	docker-compose up
+
 ## enter the dev workspace
 dev-workspace:
 	docker-compose run app sh
