@@ -4,7 +4,7 @@ resource "aws_ecr_repository" "web" {
 
 resource "aws_ecr_repository_policy" "policy-web" {
   repository = aws_ecr_repository.web.name
-  policy = <<EOF
+  policy     = <<EOF
 {
     "Version": "2008-10-17",
     "Statement": [
@@ -40,7 +40,7 @@ resource "aws_ecr_repository" "app" {
 
 resource "aws_ecr_repository_policy" "policy-app" {
   repository = aws_ecr_repository.app.name
-  policy = <<EOF
+  policy     = <<EOF
 {
     "Version": "2008-10-17",
     "Statement": [
@@ -76,7 +76,7 @@ resource "aws_ecr_repository" "worker" {
 
 resource "aws_ecr_repository_policy" "policy-worker" {
   repository = aws_ecr_repository.worker.name
-  policy = <<EOF
+  policy     = <<EOF
 {
     "Version": "2008-10-17",
     "Statement": [
