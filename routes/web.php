@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,4 +16,14 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::get('/job', function (Request $request) {
+    $name = $request->get('name');
+    $sentence = $request->get('sentence');
+    $fqcn = "App\\Jobs\\${name}Job";
+    dispatch(new $fqcn($sentence));
+
+    // list all queued jobs
+
 });
