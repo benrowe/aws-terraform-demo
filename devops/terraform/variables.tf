@@ -2,7 +2,7 @@
 variable "AWS_ACCESS_KEY" {}
 variable "AWS_SECRET_KEY" {}
 variable "AWS_REGION" {
-  type = string
+  type    = string
   default = "ap-southeast-2"
 }
 
@@ -11,18 +11,18 @@ variable "environment" {}
 
 // constants
 variable "db_instance" {
-  type = string
+  type    = string
   default = "db.t2.micro"
 }
 
 variable "db_name" {
   description = "Database name"
-  default = "example"
+  default     = "example"
 }
 
 variable "db_username" {
   description = "Database username"
-  default = "example"
+  default     = "example"
 }
 
 variable "db_password" {

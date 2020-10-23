@@ -5,7 +5,7 @@ resource "aws_ecr_repository" "main" {
 
 resource "aws_ecr_repository_policy" "main" {
   repository = aws_ecr_repository.main.name
-  policy = <<EOF
+  policy     = <<EOF
 {
     "Version": "2008-10-17",
     "Statement": [
