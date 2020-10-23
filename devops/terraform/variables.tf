@@ -7,6 +7,7 @@ variable "AWS_REGION" {
 }
 
 variable "stack_name" {}
+variable "environment" {}
 
 // constants
 variable "db_instance" {

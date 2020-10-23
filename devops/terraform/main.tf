@@ -1,16 +1,27 @@
+locals {
+  tags = {
+    Environment = var.environment
+    Name        = var.stack_name
+    Terraform   = "true"
+  }
+}
+
 module "ecr_web" {
   source = "./modules/ecr"
-  name = "${var.stack_name}-web"
+  name   = "${var.stack_name}-web"
+  tags   = local.tags
 }
 
 module "ecr_app" {
   source = "./modules/ecr"
-  name = "${var.stack_name}-app"
+  name   = "${var.stack_name}-app"
+  tags   = local.tags
 }
 
 module "ecr_worker" {
   source = "./modules/ecr"
-  name = "${var.stack_name}-worker"
+  name   = "${var.stack_name}-worker"
+  tags   = local.tags
 }
 
 module "vpc" {
@@ -40,12 +51,7 @@ module "vpc" {
   enable_vpn_gateway = false
 
   //  create_database_subnet_group = false
-
-  tags = {
-    Terraform = "true"
-    Environment = "prod"
-    Name = var.stack_name
-  }
+  tags = local.tags
 }
 
 module "db" {
@@ -77,14 +83,24 @@ module "db" {
   vpc_security_group_ids = module.vpc.database_subnets
 
 
-  tags = {
-    Terraform = "true"
-    Environment = "dev"
-    Name = var.stack_name
-  }
+  tags = local.tags
 }
 
 module "ecs" {
   source = "terraform-aws-modules/ecs/aws"
-
+  name   = "${var.stack_name}-ecs"
+  tags   = local.tags
 }
+
+
+//module "ecs-autoscaling" {
+//  source = "terraform-aws-modules/autoscaling/aws"
+//  version = "~> 3.0"
+//
+//  name = "something"
+//
+//  lc_name = "something"
+//
+//
+//  //  tags = local.tags
+//}
