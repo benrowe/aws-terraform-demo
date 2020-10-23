@@ -1,5 +1,6 @@
 resource "aws_ecr_repository" "main" {
   name = var.name
+  tags = var.tags
 }
 
 resource "aws_ecr_repository_policy" "main" {
