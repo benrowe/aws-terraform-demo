@@ -4,23 +4,24 @@ locals {
     Name        = var.stack_name
     Terraform   = "true"
   }
+  prefix = "${var.environment}-${var.stack_name}"
 }
 
 module "ecr_web" {
   source = "./modules/ecr"
-  name   = "${var.stack_name}-web"
+  name   = "${local.prefix}-web"
   tags   = local.tags
 }
 
 module "ecr_app" {
   source = "./modules/ecr"
-  name   = "${var.stack_name}-app"
+  name   = "${local.prefix}-app"
   tags   = local.tags
 }
 
 module "ecr_worker" {
   source = "./modules/ecr"
-  name   = "${var.stack_name}-worker"
+  name   = "${local.prefix}-worker"
   tags   = local.tags
 }
 
@@ -28,7 +29,7 @@ module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "2.59.0"
 
-  name = "vpc-module-demo"
+  name = "${local.prefix}-vpc"
   cidr = "10.0.0.0/16"
 
   azs = [
