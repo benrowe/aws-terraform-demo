@@ -48,8 +48,10 @@ module "vpc" {
     "10.0.103.0/24"
   ]
 
-  enable_nat_gateway = false
+  enable_nat_gateway = true
   enable_vpn_gateway = false
+
+  enable_dns_hostnames = true
 
   //  create_database_subnet_group = false
   tags = local.tags
