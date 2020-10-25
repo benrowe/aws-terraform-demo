@@ -57,42 +57,49 @@ module "vpc" {
   tags = local.tags
 }
 
-module "db" {
-  source  = "terraform-aws-modules/rds/aws"
-  version = "~> 2.0"
-
-  identifier = "${var.stack_name}-primary"
-
-  engine               = "mariadb"
-  engine_version       = "10.4.8"
-  family               = "mariadb10.4"
-  major_engine_version = "10.4"
-  instance_class       = var.db_instance
-  allocated_storage    = 5
-
-  name     = var.db_name
-  password = var.db_password
-  username = var.db_username
-  port     = 3306
-
-  multi_az = true
-
-  deletion_protection = true
-
-  maintenance_window = "Mon:00:00-Mon:03:00"
-  backup_window      = "03:00-06:00"
-
-  subnet_ids             = module.vpc.database_subnets
-  vpc_security_group_ids = module.vpc.database_subnets
-
-
-  tags = local.tags
-}
+//module "db" {
+//  source  = "terraform-aws-modules/rds/aws"
+//  version = "~> 2.0"
+//
+//  identifier = "${var.stack_name}-primary"
+//
+//  engine               = "mariadb"
+//  engine_version       = "10.4.8"
+//  family               = "mariadb10.4"
+//  major_engine_version = "10.4"
+//  instance_class       = var.db_instance
+//  allocated_storage    = 5
+//
+//  name     = var.db_name
+//  password = var.db_password
+//  username = var.db_username
+//  port     = 3306
+//
+//  multi_az = true
+//
+//  deletion_protection = true
+//
+//  maintenance_window = "Mon:00:00-Mon:03:00"
+//  backup_window      = "03:00-06:00"
+//
+//  subnet_ids             = module.vpc.database_subnets
+//  vpc_security_group_ids = module.vpc.database_subnets
+//
+//
+//  tags = local.tags
+//}
 
 module "ecs" {
   source = "terraform-aws-modules/ecs/aws"
-  name   = "${var.stack_name}-ecs"
+  name   = "${local.prefix}-ecs"
   tags   = local.tags
+}
+
+module "ecs_application" {
+  source     = "./modules/service-application"
+  name       = local.prefix
+  cluster_id = module.ecs.this_ecs_cluster_id
+  vpc        = module.vpc.vpc_id
 }
 
 
